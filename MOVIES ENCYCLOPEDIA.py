@@ -1,10 +1,29 @@
-#MOVIES DESCRIPTION,MOVIES STAR SEARCH AND TOP TEN MOST LIKE/DISLIKED LIST USING IMDB MODULE
-import imdb
+import imdb,sys,time
+from threading import Thread
+def style(x,y,previous_length=0):
+    #where x is the sring and y is fastness to print
+    '''and it will return a length of string in previous
+    length so that it can print len(x) number of 
+    spaces to write it down properly'''
+
+    sys.stdout.write("\r")
+    sys.stdout.write(" "*previous_length)
+    sys.stdout.flush()
+    sys.stdout.write("\r")
+    for a in x:
+        sys.stdout.write(a)
+        sys.stdout.flush()
+        time.sleep(y)
+    return len(x)
+def progress_bar(x):
+
+    for i in range(100+1):
+        time.sleep(x)
+        sys.stdout.write(('.'*i)+(''*(100-i))+("\r [ %d"%i+"% ] "))
+        sys.stdout.flush()
 k=imdb.IMDb()
-print('''WHY HAVE YOU REACHED OUT TO ME: \n1.INFO ON MOVIE STAR\n2.INFO ON MOIVE\n3.TOP 10 LIKE/DISLIKED MOVIES''')
-c = input('CHOOSE FAST(1/2/3): ')
-if c=='2':
-    m=input("ENTER THE MOVIE NAME: ")                   #TAKING INPUT FOR MOIVE
+#MOVIES NAME SECTION
+def movie_detail():
     movies = k.search_movie(str(m))                     #SEARCHING FOR ALL MOIVES RELATED TO THE NAME ENTERED
     index = movies[0].getID()                           #TAKING THE [0] INDEX MOVIE OUT OF THE LIST
     movie = k.get_movie(index)
@@ -16,12 +35,13 @@ if c=='2':
     Di = movie['director']
     list_director = ' '.join(map(str,Di))
     #PRINTING OUT THE RESULTS
-    print(f"Movie name(year):{Title}------{Year}")
-    print(f"Rating: {Rating}")
-    print(f'Movie director is/are:',list_director)
-    print(f"Cast:{cast_list}")
-elif c=='1':
-    p=input("ENTER THE ONE YOU ARE SEARCHING FOR: ")     #TAKING INPUT FOR PERSON TO BE SEARCHED
+  
+    style(f"Movie Name (year) : {Title}  ---> Released In : {Year}]\n",0.03,139)
+    style(f"Rating : {Rating}\n",0.03)
+    style(f"Movie Director Is||Are : {list_director}\n",0.02)
+    style(f"Cast : {cast_list}\n",0.01)
+#ACTOR NAME SECTION
+def actor_detail():
     star = k.search_person(str(p))                       ##SEARCHING FOR ALL PERSON RELATED TO THE NAME ENTERED
     index = star[0].getID()                              #TAKING THE [0] INDEX PERSON OUT OF THE LIST
     st = k.get_person(index)
@@ -33,27 +53,54 @@ elif c=='1':
     apperences = bio['titlesRefs']                       #STORING THE TITLE REFRENCES
     apper_list = ', '.join(map(str, apperences))         #CONVERTING TO THE LIST JOINED WITH ","
     #PRINTING OUT THE RESULTS
-    print(f"Name:{Name}")
-    print(f"Date of birth: {DOB}")
-    print(f"Height:{Height}")
-    print(f"Trivia:{trivia[0]}")
-    print(f'Movie apperences:{apper_list}')
-elif c=='3':
+    style(f"Name : {Name}\n",0.04,139)
+    style(f"Date of birth : {DOB}\n",0.03)
+    style(f"Height : {Height}\n",0.03)
+    style(f"Trivia : {trivia[0]}\n",0.03)
+    style(f'Movie apperences : {apper_list}\n',0.02)
+#TOP/BOTTOM TEN MOVIES LIST SECTION
+def top_list():
     top = k.get_top250_movies()                          #STORING THE TOP 250 MOVIES
     top1 = k.get_top250_tv()                             #STORING THE TOP 250 TV SERIES
     bottom = k.get_bottom100_movies()                    #STORING THE BOTTOM 100 MOVIES
     #PRINTING OUT THE RESULT USING FOR LOOP
-    print("-----------------------:TOP 10 MOVIES:-----------------------")
+    style("-----------------------:TOP 10 MOVIES:-----------------------\n",0.009,139)
     for i in top[0:10]:
         print(i)
-    print("-----------------------:TOP 10 TV SERIES:-----------------------")
+    style("-----------------------:TOP 10 TV SERIES:-----------------------\n",0.009)
     for i in top1[0:10]:
         print(i)
-    print("-----------------------:BOTTOM 10 MOVIES:-----------------------")
+    style("-----------------------:BOTTOM 10 MOVIES:-----------------------\n",0.009)
     for i in bottom[0:10]:
         print(i)
+
+style('''WHY HAVE YOU REACHED OUT TO ME: \n1.INFO ON MOVIE STAR\n2.INFO ON MOIVE\n3.TOP 10 LIKE/DISLIKED MOVIES\n\n''',0.04)
+previous_length=style("CHOOSE FAST - 1 || 2 || 3 : ",0.03)
+c = input()
+if c=='2':
+    previous_length=style("Enter The MOVIE Name : ",0.03,previous_length)
+    m=input()
+    print()         #TAKING INPUT FOR MOIVE
+    Thread(target=movie_detail).start()
+    style("processing... please wait --->",0.03)
+    time.sleep(1)
+    progress_bar(0.05) 
+elif c=='1':
+    style("Whome You Are Searching For? : ",0.04)
+    p=input()
+    print()                                              #TAKING INPUT FOR PERSON TO BE SEARCHED
+    Thread(target=actor_detail).start()
+    style("processing... please wait --->",0.03)
+    time.sleep(1)
+    progress_bar(0.05)
+
+
+elif c=='3':
+    Thread(target=top_list).start()
+    style("processing... please wait --->",0.03)
+    time.sleep(1)
+    progress_bar(0.06)
     print()
 else:
-    print("PLEASE DON'T WASTE MY TIME,CAN'T YOU READ THAT YOU HAVE TO CHOSE FROM ABOVE MENTIONED")
-
+    style("PLEASE DON'T WASTE MY TIME,CAN'T YOU READ THAT YOU HAVE TO CHOSE FROM ABOVE MENTIONED",0.01)
 
