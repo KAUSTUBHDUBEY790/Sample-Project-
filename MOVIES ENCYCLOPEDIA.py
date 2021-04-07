@@ -78,7 +78,7 @@ style('''WHY HAVE YOU REACHED OUT TO ME: \n1.INFO ON MOVIE STAR\n2.INFO ON MOIVE
 previous_length=style("CHOOSE FAST - 1 || 2 || 3 : ",0.03)
 c = input()
 if c=='2':
-    previous_length=style("Enter The MOVIE Name : ",0.03,previous_length)
+    previous_length=style("Enter the name of the movie here : ",0.03,previous_length)
     m=input()
     print()         #TAKING INPUT FOR MOIVE
     Thread(target=movie_detail).start()
@@ -86,7 +86,7 @@ if c=='2':
     time.sleep(1)
     progress_bar(0.05) 
 elif c=='1':
-    style("Whome You Are Searching For? : ",0.04)
+    style("Who are you searching for,try me! I may be quite helpful? : ",0.04)
     p=input()
     print()                                              #TAKING INPUT FOR PERSON TO BE SEARCHED
     Thread(target=actor_detail).start()
