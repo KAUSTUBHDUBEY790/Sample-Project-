@@ -98,7 +98,7 @@ elif c=='1':
 elif c=='3':
     Thread(target=top_list).start()
     style("processing... please wait --->",0.03)
-    time.sleep(0.03)
+    time.sleep(0.3)
     progress_bar(0.06)
     print()
 else:
